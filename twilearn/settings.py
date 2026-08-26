@@ -10,6 +10,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Security settings
+# Security settings
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
@@ -18,11 +21,6 @@ ALLOWED_HOSTS = [
     ).split(',')
     if host.strip()
 ]
-
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
