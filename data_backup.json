@@ -1,0 +1,604 @@
+[
+{
+  "model": "api.group",
+  "pk": 1,
+  "fields": {
+    "name": "Greetings",
+    "description": "Common greetings and polite expressions",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.102Z",
+    "updated_at": "2026-08-24T20:33:28.102Z"
+  }
+},
+{
+  "model": "api.group",
+  "pk": 2,
+  "fields": {
+    "name": "Food & Market",
+    "description": "Food items and market vocabulary",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.130Z",
+    "updated_at": "2026-08-24T20:33:28.130Z"
+  }
+},
+{
+  "model": "api.group",
+  "pk": 3,
+  "fields": {
+    "name": "Family",
+    "description": "Family members and relationships",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.148Z",
+    "updated_at": "2026-08-24T20:33:28.149Z"
+  }
+},
+{
+  "model": "api.group",
+  "pk": 4,
+  "fields": {
+    "name": "Everyday Verbs",
+    "description": "Common action verbs",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.169Z",
+    "updated_at": "2026-08-24T20:33:28.169Z"
+  }
+},
+{
+  "model": "api.word",
+  "pk": 1,
+  "fields": {
+    "word": "Akwaaba",
+    "language": "twi",
+    "translation": "Welcome",
+    "pronunciation": "ah-kwaa-bah",
+    "example_sentence": "Akwaaba wo ha",
+    "example_translation": "Welcome here",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.196Z",
+    "updated_at": "2026-08-24T20:33:28.196Z",
+    "groups": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 2,
+  "fields": {
+    "word": "Maakye",
+    "language": "twi",
+    "translation": "Good morning",
+    "pronunciation": "maa-chi",
+    "example_sentence": "Maakye, wo ho te sɛn?",
+    "example_translation": "Good morning, how are you?",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.230Z",
+    "updated_at": "2026-08-24T20:33:28.230Z",
+    "groups": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 3,
+  "fields": {
+    "word": "Mema wo akye",
+    "language": "twi",
+    "translation": "Good morning (reply)",
+    "pronunciation": "meh-ma wo a-chi",
+    "example_sentence": "Mema wo akye",
+    "example_translation": "Good morning to you too",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.257Z",
+    "updated_at": "2026-08-24T20:33:28.257Z",
+    "groups": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 4,
+  "fields": {
+    "word": "Medaase",
+    "language": "twi",
+    "translation": "Thank you",
+    "pronunciation": "meh-daa-seh",
+    "example_sentence": "Medaase kɛseɛ",
+    "example_translation": "Thank you very much",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.287Z",
+    "updated_at": "2026-08-24T20:33:28.287Z",
+    "groups": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 5,
+  "fields": {
+    "word": "Wo ho te sɛn?",
+    "language": "twi",
+    "translation": "How are you?",
+    "pronunciation": "wo ho teh sen",
+    "example_sentence": "Wo ho te sɛn?",
+    "example_translation": "How are you?",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.315Z",
+    "updated_at": "2026-08-24T20:33:28.315Z",
+    "groups": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 6,
+  "fields": {
+    "word": "Me ho yɛ",
+    "language": "twi",
+    "translation": "I am fine",
+    "pronunciation": "meh ho yeh",
+    "example_sentence": "Me ho yɛ, na wo ho nso yɛ",
+    "example_translation": "I am fine, and you too?",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.342Z",
+    "updated_at": "2026-08-24T20:33:28.342Z",
+    "groups": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 7,
+  "fields": {
+    "word": "Aburoo",
+    "language": "twi",
+    "translation": "Yam",
+    "pronunciation": "ah-bu-ro",
+    "example_sentence": "Mebɔ aburoo",
+    "example_translation": "I want to buy yam",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.368Z",
+    "updated_at": "2026-08-24T20:33:28.368Z",
+    "groups": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 8,
+  "fields": {
+    "word": "Bankye",
+    "language": "twi",
+    "translation": "Cassava",
+    "pronunciation": "ban-chi",
+    "example_sentence": "Bankye yɛ aduane",
+    "example_translation": "Cassava is food",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.397Z",
+    "updated_at": "2026-08-24T20:33:28.397Z",
+    "groups": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 9,
+  "fields": {
+    "word": "Mankani",
+    "language": "twi",
+    "translation": "Plantain",
+    "pronunciation": "man-ka-ni",
+    "example_sentence": "Mankani a ɔyɛ dɔ",
+    "example_translation": "Ripe plantain",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.426Z",
+    "updated_at": "2026-08-24T20:33:28.426Z",
+    "groups": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 10,
+  "fields": {
+    "word": "Nkate",
+    "language": "twi",
+    "translation": "Peanut",
+    "pronunciation": "n-ka-teh",
+    "example_sentence": "Nkate gu nkyene",
+    "example_translation": "Peanuts with salt",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.457Z",
+    "updated_at": "2026-08-24T20:33:28.457Z",
+    "groups": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 11,
+  "fields": {
+    "word": "Anwa",
+    "language": "twi",
+    "translation": "Palm oil",
+    "pronunciation": "an-wa",
+    "example_sentence": "Medi anwa kɔɔ aduanan",
+    "example_translation": "I took palm oil to the kitchen",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.501Z",
+    "updated_at": "2026-08-24T20:33:28.501Z",
+    "groups": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 12,
+  "fields": {
+    "word": "Ɛna",
+    "language": "twi",
+    "translation": "Mother",
+    "pronunciation": "eh-na",
+    "example_sentence": "Ɛna me yɛ",
+    "example_translation": "My mother",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.533Z",
+    "updated_at": "2026-08-24T20:33:28.533Z",
+    "groups": [
+      3
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 13,
+  "fields": {
+    "word": "Agya",
+    "language": "twi",
+    "translation": "Father",
+    "pronunciation": "ah-gya",
+    "example_sentence": "Agya me yɛ",
+    "example_translation": "My father",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.564Z",
+    "updated_at": "2026-08-24T20:33:28.564Z",
+    "groups": [
+      3
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 14,
+  "fields": {
+    "word": "Abɔfra",
+    "language": "twi",
+    "translation": "Child",
+    "pronunciation": "ah-bu-fra",
+    "example_sentence": "Abɔfra no yɛ ɔbarima",
+    "example_translation": "The child is a boy",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.598Z",
+    "updated_at": "2026-08-24T20:33:28.598Z",
+    "groups": [
+      3
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 15,
+  "fields": {
+    "word": "Nana",
+    "language": "twi",
+    "translation": "Grandparent/Chief",
+    "pronunciation": "na-na",
+    "example_sentence": "Nana me yɛ",
+    "example_translation": "My grandparent",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.631Z",
+    "updated_at": "2026-08-24T20:33:28.631Z",
+    "groups": [
+      3
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 16,
+  "fields": {
+    "word": "Onua",
+    "language": "twi",
+    "translation": "Sibling",
+    "pronunciation": "o-nua",
+    "example_sentence": "Onua me yɛ",
+    "example_translation": "My sibling",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.676Z",
+    "updated_at": "2026-08-24T20:33:28.676Z",
+    "groups": [
+      3
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 17,
+  "fields": {
+    "word": "Kɔ",
+    "language": "twi",
+    "translation": "Go",
+    "pronunciation": "ko",
+    "example_sentence": "Mekɔ sukuu",
+    "example_translation": "I am going to school",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.711Z",
+    "updated_at": "2026-08-24T20:33:28.711Z",
+    "groups": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 18,
+  "fields": {
+    "word": "Bra",
+    "language": "twi",
+    "translation": "Come",
+    "pronunciation": "bra",
+    "example_sentence": "Bra ha",
+    "example_translation": "Come here",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.746Z",
+    "updated_at": "2026-08-24T20:33:28.746Z",
+    "groups": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 19,
+  "fields": {
+    "word": "Di",
+    "language": "twi",
+    "translation": "Eat",
+    "pronunciation": "di",
+    "example_sentence": "Medi aduane",
+    "example_translation": "I am eating food",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.780Z",
+    "updated_at": "2026-08-24T20:33:28.780Z",
+    "groups": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 20,
+  "fields": {
+    "word": "Nom",
+    "language": "twi",
+    "translation": "Drink",
+    "pronunciation": "nom",
+    "example_sentence": "Menom nsuo",
+    "example_translation": "I am drinking water",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.822Z",
+    "updated_at": "2026-08-24T20:33:28.822Z",
+    "groups": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 21,
+  "fields": {
+    "word": "Kasa",
+    "language": "twi",
+    "translation": "Speak/Talk",
+    "pronunciation": "ka-sa",
+    "example_sentence": "Kasa Twi kɛseɛ",
+    "example_translation": "Speak Twi well",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.855Z",
+    "updated_at": "2026-08-24T20:33:28.855Z",
+    "groups": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 22,
+  "fields": {
+    "word": "Te",
+    "language": "twi",
+    "translation": "Listen",
+    "pronunciation": "teh",
+    "example_sentence": "Te me kasa no",
+    "example_translation": "Listen to what I say",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.888Z",
+    "updated_at": "2026-08-24T20:33:28.888Z",
+    "groups": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 23,
+  "fields": {
+    "word": "Hu",
+    "language": "twi",
+    "translation": "See",
+    "pronunciation": "hu",
+    "example_sentence": "Mehu no",
+    "example_translation": "I see it",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.925Z",
+    "updated_at": "2026-08-24T20:33:28.925Z",
+    "groups": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.word",
+  "pk": 24,
+  "fields": {
+    "word": "Dwuma",
+    "language": "twi",
+    "translation": "Work",
+    "pronunciation": "dwoo-ma",
+    "example_sentence": "Medwuma adwuma",
+    "example_translation": "I am working",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.955Z",
+    "updated_at": "2026-08-24T20:33:28.955Z",
+    "groups": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.studyactivity",
+  "pk": 1,
+  "fields": {
+    "name": "Flashcards",
+    "activity_type": "flashcards",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:28.988Z",
+    "updated_at": "2026-08-24T20:33:28.988Z",
+    "groups": [
+      2,
+      1
+    ],
+    "words": []
+  }
+},
+{
+  "model": "api.studyactivity",
+  "pk": 2,
+  "fields": {
+    "name": "Listening Quiz",
+    "activity_type": "quiz",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:29.027Z",
+    "updated_at": "2026-08-24T20:33:29.028Z",
+    "groups": [
+      4,
+      3
+    ],
+    "words": []
+  }
+},
+{
+  "model": "api.studyactivity",
+  "pk": 3,
+  "fields": {
+    "name": "Matching Game",
+    "activity_type": "matching",
+    "created_by": null,
+    "created_at": "2026-08-24T20:33:29.097Z",
+    "updated_at": "2026-08-24T20:33:29.097Z",
+    "groups": [
+      3,
+      1
+    ],
+    "words": []
+  }
+},
+{
+  "model": "api.studysession",
+  "pk": 1,
+  "fields": {
+    "activity": 2,
+    "user": null,
+    "started_at": "2026-08-24T20:33:29.196Z",
+    "completed_at": "2026-08-14T06:33:29.190Z",
+    "score": 77,
+    "total_questions": 16,
+    "correct_answers": 9
+  }
+},
+{
+  "model": "api.studysession",
+  "pk": 2,
+  "fields": {
+    "activity": 1,
+    "user": null,
+    "started_at": "2026-08-24T20:33:29.233Z",
+    "completed_at": "2026-08-22T15:33:29.222Z",
+    "score": 76,
+    "total_questions": 10,
+    "correct_answers": 13
+  }
+},
+{
+  "model": "api.studysession",
+  "pk": 3,
+  "fields": {
+    "activity": 1,
+    "user": null,
+    "started_at": "2026-08-24T20:33:29.261Z",
+    "completed_at": "2026-08-20T15:33:29.260Z",
+    "score": 68,
+    "total_questions": 14,
+    "correct_answers": 18
+  }
+},
+{
+  "model": "api.studysession",
+  "pk": 4,
+  "fields": {
+    "activity": 3,
+    "user": null,
+    "started_at": "2026-08-24T20:33:29.306Z",
+    "completed_at": "2026-08-21T23:33:29.305Z",
+    "score": 80,
+    "total_questions": 11,
+    "correct_answers": 15
+  }
+},
+{
+  "model": "api.studysession",
+  "pk": 5,
+  "fields": {
+    "activity": 1,
+    "user": null,
+    "started_at": "2026-08-24T20:33:29.327Z",
+    "completed_at": "2026-08-18T18:33:29.327Z",
+    "score": 86,
+    "total_questions": 18,
+    "correct_answers": 13
+  }
+},
+{
+  "model": "api.studysession",
+  "pk": 6,
+  "fields": {
+    "activity": 3,
+    "user": null,
+    "started_at": "2026-08-25T12:37:23.483Z",
+    "completed_at": null,
+    "score": null,
+    "total_questions": 0,
+    "correct_answers": 0
+  }
+}
+]

@@ -65,40 +65,19 @@ if not DEBUG:
 
 # Database configuration
 if os.environ.get('DATABASE_URL'):
-    # Use PostgreSQL on Render
-    try:
-        import dj_database_url
-        DATABASES = {
-            'default': dj_database_url.config(
-                conn_max_age=600,
-                ssl_require=not DEBUG,
-            )
-        }
-    except ImportError:
-        # If dj_database_url is not available, use SQLite
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
-        }
-    except Exception as e:
-        import logging
-        logging.error(f"Database configuration error: {e}")
-        # Fallback to SQLite if database URL is invalid
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
-        }
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,      # fine here — Postgres
+            ssl_require=not DEBUG,
+        )
+    }
 else:
-    # Use SQLite for local development
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
-        }
+            # no CONN_MAX_AGE here
+        },
     }
 
 AUTH_PASSWORD_VALIDATORS = [
