@@ -15,11 +15,9 @@ services:
           name: twilearn-db
           property: connectionString
       - key: ALLOWED_HOSTS
-        value: twilearn.onrender.com,*.onrender.com
+        value: twilearn.onrender.com,.onrender.com
       - key: CORS_ALLOW_ALL_ORIGINS
         value: True
-      - key: PORT
-        value: 8000
     healthCheckPath: /
 
 databases:
