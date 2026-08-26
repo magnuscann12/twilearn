@@ -70,7 +70,10 @@ WSGI_APPLICATION = 'twilearn.wsgi.application'
 if os.environ.get('DATABASE_URL'):
     # Use PostgreSQL on Render
     DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            ssl_require=True,
+        )
     }
 else:
     # Use SQLite for local development
@@ -142,3 +145,7 @@ else:
 
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://twilearn.onrender.com',
+]
