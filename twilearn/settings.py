@@ -175,15 +175,20 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'INFO' if DEBUG else 'WARNING',
+        'level': 'DEBUG' if DEBUG else 'INFO',
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'INFO' if DEBUG else 'WARNING',
+            'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False,
         },
         'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.db.backends': {
             'handlers': ['console'],
             'level': 'ERROR',
             'propagate': False,

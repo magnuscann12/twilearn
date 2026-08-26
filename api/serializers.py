@@ -15,33 +15,42 @@ class GroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ['id', 'name', 'description', 'word_count', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'description', 'word_count', 'created_at', 'updated_at', 'created_by']
+        read_only_fields = ['created_by']
 
     def get_word_count(self, obj):
         return obj.words.count()
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            validated_data['created_by'] = request.user
+        return Group.objects.create(**validated_data)
 
 
 class WordSerializer(serializers.ModelSerializer):
     groups = GroupSerializer(many=True, read_only=True)
     group_ids = serializers.PrimaryKeyRelatedField(
-        source='groups', many=True, queryset=Group.objects.all(), write_only=True, required=False
+        source='groups', many=True, queryset=Group.objects.all(), write_only=True, required=False, allow_null=True
     )
     progress = serializers.SerializerMethodField()
 
     class Meta:
         model = Word
-        fields = ['id', 'word', 'language', 'translation', 'pronunciation', 
+        fields = ['id', 'word', 'language', 'translation', 'pronunciation',
                   'example_sentence', 'example_translation', 'groups', 'group_ids',
-                  'progress', 'created_at', 'updated_at']
+                  'progress', 'created_at', 'updated_at', 'created_by']
+        read_only_fields = ['created_by']
 
     def get_progress(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             try:
-                progress = obj.progress.get(user=request.user)
-                return WordProgressSerializer(progress).data
-            except WordProgress.DoesNotExist:
-                return None
+                progress = obj.progress.filter(user=request.user).first()
+                if progress:
+                    return WordProgressSerializer(progress).data
+            except Exception:
+                pass
         return None
 
     def create(self, validated_data):
@@ -50,7 +59,8 @@ class WordSerializer(serializers.ModelSerializer):
         if request and request.user.is_authenticated:
             validated_data['created_by'] = request.user
         word = Word.objects.create(**validated_data)
-        word.groups.set(groups)
+        if groups:
+            word.groups.set(groups)
         return word
 
 
@@ -58,23 +68,29 @@ class StudyActivitySerializer(serializers.ModelSerializer):
     groups = GroupSerializer(many=True, read_only=True)
     words = WordSerializer(many=True, read_only=True)
     group_ids = serializers.PrimaryKeyRelatedField(
-        source='groups', many=True, queryset=Group.objects.all(), write_only=True, required=False
+        source='groups', many=True, queryset=Group.objects.all(), write_only=True, required=False, allow_null=True
     )
     word_ids = serializers.PrimaryKeyRelatedField(
-        source='words', many=True, queryset=Word.objects.all(), write_only=True, required=False
+        source='words', many=True, queryset=Word.objects.all(), write_only=True, required=False, allow_null=True
     )
 
     class Meta:
         model = StudyActivity
-        fields = ['id', 'name', 'activity_type', 'groups', 'words', 
-                  'group_ids', 'word_ids', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'activity_type', 'groups', 'words',
+                  'group_ids', 'word_ids', 'created_at', 'updated_at', 'created_by']
+        read_only_fields = ['created_by']
 
     def create(self, validated_data):
         groups = validated_data.pop('groups', [])
         words = validated_data.pop('words', [])
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            validated_data['created_by'] = request.user
         activity = StudyActivity.objects.create(**validated_data)
-        activity.groups.set(groups)
-        activity.words.set(words)
+        if groups:
+            activity.groups.set(groups)
+        if words:
+            activity.words.set(words)
         return activity
 
 
