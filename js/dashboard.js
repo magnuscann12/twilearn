@@ -1,7 +1,15 @@
-
 import { API } from './app.js';
-export async function renderDashboard(root){
+
+export async function renderDashboard(root) {
   const data = await API.getDashboard();
+
+  const studied = Number(data.progress?.studied ?? 0);
+  const total = Number(data.progress?.total ?? 0);
+  const studiedDisplay = studied === 0 ? 'Zero' : studied;
+  const progressPercent = total > 0
+    ? Math.min((studied / total) * 100, 100)
+    : 0;
+
   root.innerHTML = `
     <div class="grid md:grid-cols-3 gap-5">
       <div class="card p-5 md:col-span-2">
@@ -17,10 +25,14 @@ export async function renderDashboard(root){
       </div>
       <div class="card p-5">
         <div class="text-xs uppercase tracking-widest text-zinc-500 mb-3">Study Progress</div>
-        <div class="text-3xl font-extrabold">${data.progress.studied}/${data.progress.total}</div>
+        <div class="text-3xl font-extrabold">${studiedDisplay}/${total}</div>
         <div class="text-sm text-zinc-500">words studied</div>
-        <div class="mt-4 h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden"><div style="width:${data.progress.studied/data.progress.total*100}%" class="h-full bg-zinc-900 dark:bg-white"></div></div>
-        <div class="mt-3 text-sm">Mastery <span class="font-bold">${data.progress.mastery}%</span></div>
+        <div class="mt-4 h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+          <div style="width:${progressPercent}%" class="h-full bg-zinc-900 dark:bg-white"></div>
+        </div>
+        <div class="mt-3 text-sm">
+          Mastery <span class="font-bold">${data.progress.mastery}%</span>
+        </div>
       </div>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">

@@ -1,4 +1,3 @@
-
 import { API } from './app.js';
 export async function renderDashboard(root){
   const data = await API.getDashboard();
