@@ -231,12 +231,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if not DEBUG:
-    MIDDLEWARE.insert(
-        1,
-        'whitenoise.middleware.WhiteNoiseMiddleware'
-    )
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
