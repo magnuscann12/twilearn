@@ -161,17 +161,15 @@ if not DEBUG and os.environ.get('ALLOWED_HOSTS'):
                 CORS_ALLOWED_ORIGINS.append(http_origin)
 
 # CSRF trusted origins should include the production domain
-CSRF_TRUSTED_ORIGINS = []
-if not DEBUG and os.environ.get('ALLOWED_HOSTS'):
-    for host in os.environ.get('ALLOWED_HOSTS').split(','):
-        host = host.strip()
-        if host:
-            CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
-            # Also add HTTP version for flexibility
-            CSRF_TRUSTED_ORIGINS.append(f"http://{host}")
-else:
-    # Default for local development
-    CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
+CSRF_TRUSTED_ORIGINS = [
+    'https://twilearn.onrender.com',
+]
+
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS += [
+        'http://localhost:8000',
+        'http://127.0.0.1:8000',
+    ]
 
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
