@@ -4,15 +4,19 @@ Django settings for twilearn project.
 
 from pathlib import Path
 import os
-import dj_database_url
-import logging
+
+# Only import dj_database_url if DATABASE_URL is set
+if os.environ.get('DATABASE_URL'):
+    try:
+        import dj_database_url
+    except ImportError:
+        pass
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Security settings
-# Security settings
-DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+DEBUG = os.environ.get('DEBUG', 'True').strip().lower() == 'true'
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -37,7 +41,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -46,6 +49,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Only add WhiteNoise in production
+if not DEBUG:
+    try:
+        MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+    except ImportError:
+        pass
 
 ROOT_URLCONF = 'twilearn.urls'
 
@@ -67,15 +77,39 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'twilearn.wsgi.application'
 
+SECURE_SSL_REDIRECT = (
+    not DEBUG and
+    os.environ.get('SECURE_SSL_REDIRECT', 'True').strip().lower() == 'true'
+)
+
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = not DEBUG
+
+if not DEBUG:
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Database configuration
 if os.environ.get('DATABASE_URL'):
     # Use PostgreSQL on Render
     try:
+        import dj_database_url
         DATABASES = {
             'default': dj_database_url.config(
                 conn_max_age=600,
                 ssl_require=True,
             )
+        }
+    except ImportError:
+        # If dj_database_url is not available, use SQLite
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
         }
     except Exception as e:
         import logging
@@ -113,14 +147,18 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-STORAGES = {
-    'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
-    },
-}
-
-# WhiteNoise configuration
-WHITENOISE_USE_FINDERS = True
+# Only use WhiteNoise in production
+if not DEBUG:
+    try:
+        STORAGES = {
+            'staticfiles': {
+                'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+            },
+        }
+        WHITENOISE_USE_FINDERS = True
+    except ImportError:
+        # If whitenoise is not available, use default storage
+        pass
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -151,21 +189,18 @@ if not DEBUG and os.environ.get('ALLOWED_HOSTS'):
             if http_origin not in CORS_ALLOWED_ORIGINS:
                 CORS_ALLOWED_ORIGINS.append(http_origin)
 
-# Security settings for production
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    CSRF_COOKIE_HTTPONLY = True
+# CSRF trusted origins should include the production domain
+CSRF_TRUSTED_ORIGINS = []
+if not DEBUG and os.environ.get('ALLOWED_HOSTS'):
+    for host in os.environ.get('ALLOWED_HOSTS').split(','):
+        host = host.strip()
+        if host:
+            CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
+            # Also add HTTP version for flexibility
+            CSRF_TRUSTED_ORIGINS.append(f"http://{host}")
 else:
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
-    CSRF_COOKIE_HTTPONLY = False
+    # Default for local development
+    CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
 
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
@@ -192,12 +227,12 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG' if DEBUG else 'INFO',
+        'level': 'INFO',
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'DEBUG' if DEBUG else 'INFO',
+            'level': 'INFO',
             'propagate': False,
         },
         'django.request': {
@@ -205,23 +240,10 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
         },
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
     },
 }
 
-# CSRF trusted origins should include the production domain
-CSRF_TRUSTED_ORIGINS = []
-if not DEBUG and os.environ.get('ALLOWED_HOSTS'):
-    for host in os.environ.get('ALLOWED_HOSTS').split(','):
-        host = host.strip()
-        if host:
-            CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
-            # Also add HTTP version for flexibility
-            CSRF_TRUSTED_ORIGINS.append(f"http://{host}")
-else:
-    # Default for local development
-    CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'uw@3cf78imgk51gld!z6!2=*=m#+5)#d#1jm(6q8_g#xu1pj#4'
+)

@@ -7,7 +7,7 @@ services:
     startCommand: "gunicorn twilearn.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --timeout 120 --log-level info --access-logfile - --error-logfile -"
     envVars:
       - key: DEBUG
-        value: False
+        value: "False"
       - key: SECRET_KEY
         generateValue: true
       - key: DATABASE_URL
@@ -15,9 +15,11 @@ services:
           name: twilearn-db
           property: connectionString
       - key: ALLOWED_HOSTS
-        value: twilearn.onrender.com,.onrender.com
+        value: "twilearn.onrender.com"
       - key: CORS_ALLOW_ALL_ORIGINS
         value: True
+      - key: SECURE_SSL_REDIRECT
+        value: "True"
     healthCheckPath: /
 
 databases:
