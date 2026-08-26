@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TWI • AKWAABA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/style.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+</head>
+<body>
+<header class="sticky top-0 z-30 backdrop-blur-xl bg-white/80 dark:bg-zinc-900/80 border-b" style="border-color:var(--border)">
+  <div class="mx-auto max-w-[1280px] px-4 md:px-6 h-[56px] flex items-center justify-between">
+    <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 grid place-items-center font-bold text-[13px]">TWI</div><div class="font-extrabold">TWI • AKWAABA</div><div class="hidden md:flex ml-4 gap-[2px] w-12 h-[3px] rounded-full overflow-hidden"><div class="flex-1 bg-[#CE1126]"></div><div class="flex-1 bg-[#FCD116]"></div><div class="flex-1 bg-[#006B3F]"></div></div></div>
+    <nav id="topNav" class="hidden md:flex items-center gap-1 text-sm"></nav>
+    <div class="flex items-center gap-3">
+      <div id="authContainer" class="flex items-center gap-3"></div>
+      <div class="text-xs px-3 py-1.5 rounded-full border" style="border-color:var(--border)">🇬🇭 Twi (Asante)</div>
+    </div>
+  </div>
+</header>
+<div class="mx-auto max-w-[1280px] px-4 md:px-6 py-6 flex gap-6">
+  <aside id="sideBar" class="hidden md:block w-[220px] shrink-0">
+    <div class="sticky top-[80px] space-y-4">
+      <div id="sideNav" class="card p-3 space-y-1"></div>
+      <div class="px-3 text-[11px] text-zinc-500 leading-relaxed">Frontend mock • Replace API calls with<br>fetch('/api/...') per spec</div>
+    </div>
+  </aside>
+  <main id="app" class="flex-1 min-w-0 pb-24 md:pb-0"></main>
+</div>
+<nav id="bottomNav" class="md:hidden fixed bottom-0 inset-x-0 bg-white/95 dark:bg-zinc-900/95 border-t backdrop-blur-xl z-40 grid grid-cols-6 px-2 py-2" style="border-color:var(--border)"></nav>
+
+<script type="module">
+import { API } from '/static/js/app.js';
+import { renderDashboard } from '/static/js/dashboard.js';
+import { renderActivities, renderActivityShow, renderLaunch } from '/static/js/study-activities.js';
+import { renderWords, renderWordShow } from '/static/js/words.js';
+import { renderGroups, renderGroupShow } from '/static/js/groups.js';
+import { renderSessions, renderSessionShow } from '/static/js/sessions.js';
+import { renderSettings } from '/static/js/settings.js';
+import { renderAuthPage, updateAuthUI, clearAuth } from '/static/js/auth.js';
+
+const routes = [
+  {label:'Dashboard', hash:'#/dashboard', icon:'◧'},
+  {label:'Study Activities', hash:'#/study_activities', icon:'⚡'},
+  {label:'Words', hash:'#/words', icon:'A'},
+  {label:'Groups', hash:'#/groups', icon:'◫'},
+  {label:'Sessions', hash:'#/study_sessions', icon:'◷'},
+  {label:'Settings', hash:'#/settings', icon:'⚙'},
+];
+
+function setNavVisible(visible) {
+  const topNav = document.getElementById('topNav');
+  const sideBar = document.getElementById('sideBar');
+  const bottomNav = document.getElementById('bottomNav');
+  const display = visible ? '' : 'none';
+  if (topNav) topNav.style.display = display;
+  if (sideBar) sideBar.style.display = display;
+  if (bottomNav) bottomNav.style.display = display;
+}
+
+function buildNav(){
+  const top = document.getElementById('topNav'); const side = document.getElementById('sideNav'); const bottom = document.getElementById('bottomNav');
+  const isActive = h=> location.hash.startsWith(h) || (h==='#/dashboard' && (location.hash===''||location.hash==='#/'));
+  const html = routes.map(r=>`<button data-hash="${r.hash}" class="navbtn px-3.5 py-2 rounded-full font-medium ${isActive(r.hash)?'nav-active':''}">${r.icon} ${r.label}</button>`).join('');
+  top.innerHTML = html; side.innerHTML = routes.map(r=>`<button data-hash="${r.hash}" class="navbtn w-full text-left px-3 py-2.5 rounded-xl text-sm ${isActive(r.hash)?'nav-active':''}">${r.icon} ${r.label}</button>`).join('');
+  bottom.innerHTML = routes.map(r=>`<button data-hash="${r.hash}" class="navbtn flex flex-col items-center py-1.5 text-[10px] ${isActive(r.hash)?'font-bold':''}"><span>${r.icon}</span><span>${r.label.split(' ')[0]}</span></button>`).join('');
+  document.querySelectorAll('.navbtn').forEach(b=> b.onclick=()=> location.hash=b.dataset.hash);
+}
+
+async function checkAuthAndRender(){
+  const isAuthenticated = await API.checkAuth();
+  if (!isAuthenticated) {
+    clearAuth();
+    setNavVisible(false);
+    updateAuthUI();
+    renderAuthPage(document.getElementById('app'), 'login');
+    return;
+  }
+  setNavVisible(true);
+  updateAuthUI();
+  await router();
+}
+
+async function router(){
+  buildNav();
+  const root = document.getElementById('app');
+  const hash = location.hash || '#/dashboard';
+  const [, base, id, action] = hash.split('/');
+  if(hash.startsWith('#/dashboard')) await renderDashboard(root);
+  else if(hash==='#/study_activities' || hash==='#/study_activities/') await renderActivities(root);
+  else if(base==='study_activities' && action==='launch') await renderLaunch(root, id);
+  else if(base==='study_activities' && id) await renderActivityShow(root, id);
+  else if(base==='study_activities') await renderActivities(root);
+  else if(base==='words' && id) await renderWordShow(root, id);
+  else if(base==='words') await renderWords(root);
+  else if(base==='groups' && id) await renderGroupShow(root, id);
+  else if(base==='groups') await renderGroups(root);
+  else if(base==='study_sessions' && id) await renderSessionShow(root, id);
+  else if(base==='study_sessions') await renderSessions(root);
+  else if(base==='settings') renderSettings(root);
+  else await renderDashboard(root);
+}
+window.addEventListener('hashchange', checkAuthAndRender);
+checkAuthAndRender();
+</script>
+</body>
+</html>
