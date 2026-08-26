@@ -23,12 +23,12 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
         'ALLOWED_HOSTS',
-        'localhost,127.0.0.1'
+        'localhost,127.0.0.1,twilearn.onrender.com'
     ).split(',')
     if host.strip()
 ]
 
-# Only add WhiteNoise in production
+# Only add WhiteNoise in production.
 ROOT_URLCONF = 'twilearn.urls'
 
 TEMPLATES = [
