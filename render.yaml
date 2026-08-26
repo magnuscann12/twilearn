@@ -17,7 +17,7 @@ services:
       - key: ALLOWED_HOSTS
         value: "twilearn.onrender.com"
       - key: CORS_ALLOW_ALL_ORIGINS
-        value: True
+        value: "True"
       - key: SECURE_SSL_REDIRECT
         value: "True"
     healthCheckPath: /

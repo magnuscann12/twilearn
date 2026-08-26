@@ -4,6 +4,7 @@ Django settings for twilearn project.
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Only import dj_database_url if DATABASE_URL is set
 if os.environ.get('DATABASE_URL'):
@@ -16,47 +17,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Security settings
-DEBUG = os.environ.get('DEBUG', 'True').strip().lower() == 'true'
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
         'ALLOWED_HOSTS',
-        'localhost,127.0.0.1,twilearn.onrender.com'
+        'localhost,127.0.0.1'
     ).split(',')
     if host.strip()
 ]
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'corsheaders',
-    'api',
-]
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
 # Only add WhiteNoise in production
-if not DEBUG:
-    try:
-        MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-    except ImportError:
-        pass
-
 ROOT_URLCONF = 'twilearn.urls'
 
 TEMPLATES = [
@@ -78,8 +50,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'twilearn.wsgi.application'
 
 SECURE_SSL_REDIRECT = (
-    not DEBUG and
-    os.environ.get('SECURE_SSL_REDIRECT', 'True').strip().lower() == 'true'
+    os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() == 'true'
 )
 
 SESSION_COOKIE_SECURE = not DEBUG
@@ -100,7 +71,7 @@ if os.environ.get('DATABASE_URL'):
         DATABASES = {
             'default': dj_database_url.config(
                 conn_max_age=600,
-                ssl_require=True,
+                ssl_require=not DEBUG,
             )
         }
     except ImportError:
@@ -247,3 +218,33 @@ SECRET_KEY = os.environ.get(
     'SECRET_KEY',
     'uw@3cf78imgk51gld!z6!2=*=m#+5)#d#1jm(6q8_g#xu1pj#4'
 )
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+if not DEBUG:
+    MIDDLEWARE.insert(
+        1,
+        'whitenoise.middleware.WhiteNoiseMiddleware'
+    )
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'api',
+]
