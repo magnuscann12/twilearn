@@ -5,6 +5,7 @@ Django settings for twilearn project.
 from pathlib import Path
 import os
 import dj_database_url
+import logging
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -115,7 +116,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 }
 
@@ -126,9 +127,15 @@ CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:
 
 # Add production domain if available
 if not DEBUG and os.environ.get('ALLOWED_HOSTS'):
-    production_domain = os.environ.get('ALLOWED_HOSTS').split(',')[0]
-    if production_domain not in CORS_ALLOWED_ORIGINS:
-        CORS_ALLOWED_ORIGINS.append(f"https://{production_domain}")
+    for host in os.environ.get('ALLOWED_HOSTS').split(','):
+        host = host.strip()
+        if host:
+            https_origin = f"https://{host}"
+            http_origin = f"http://{host}"
+            if https_origin not in CORS_ALLOWED_ORIGINS:
+                CORS_ALLOWED_ORIGINS.append(https_origin)
+            if http_origin not in CORS_ALLOWED_ORIGINS:
+                CORS_ALLOWED_ORIGINS.append(http_origin)
 
 # Security settings for production
 if not DEBUG:
@@ -146,6 +153,53 @@ else:
 CSRF_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SAMESITE = 'Lax'
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://twilearn.onrender.com',
-]
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO' if DEBUG else 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO' if DEBUG else 'WARNING',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
+
+# CSRF trusted origins should include the production domain
+CSRF_TRUSTED_ORIGINS = []
+if not DEBUG and os.environ.get('ALLOWED_HOSTS'):
+    for host in os.environ.get('ALLOWED_HOSTS').split(','):
+        host = host.strip()
+        if host:
+            CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
+            # Also add HTTP version for flexibility
+            CSRF_TRUSTED_ORIGINS.append(f"http://{host}")
+else:
+    # Default for local development
+    CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']

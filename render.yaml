@@ -2,8 +2,9 @@ services:
   - type: web
     name: twilearn
     env: python
-    buildCommand: "chmod +x render-build.sh && ./render-build.sh"
-    startCommand: "gunicorn twilearn.wsgi:application"
+    plan: free
+    buildCommand: "python -m pip install --upgrade pip && pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn twilearn.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: DEBUG
         value: False
@@ -17,6 +18,9 @@ services:
         value: twilearn.onrender.com
       - key: CORS_ALLOW_ALL_ORIGINS
         value: False
+      - key: PORT
+        value: 8000
+    healthCheckPath: /
 
 databases:
   - name: twilearn-db
