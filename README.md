@@ -114,9 +114,9 @@ This project is configured for deployment on Render.com with the following files
 
 3. **Environment Variables (automatically set by render.yaml):**
    - `DEBUG=False`
-   - `SECRET_KEY` (auto-generated)
+   - `SECRET_KEY`
    - `DATABASE_URL` (auto-created PostgreSQL)
-   - `ALLOWED_HOSTS` (your Render domain)
+   - `ALLOWED_HOSTS` 
 
 4. **The build process will:**
    - Install dependencies
