@@ -29,42 +29,11 @@ export const API = {
   },
   async getDashboard() {
     try {
-      const [sessionsRes, wordsRes, groupsRes] = await Promise.all([
-        fetch('/api/study-sessions/', { credentials: 'same-origin' }),
-        fetch('/api/words/', { credentials: 'same-origin' }),
-        fetch('/api/groups/', { credentials: 'same-origin' })
-      ]);
-      
-      if (!sessionsRes.ok || !wordsRes.ok || !groupsRes.ok) {
+      const res = await fetch('/api/study-sessions/dashboard/', { credentials: 'same-origin' });
+      if (!res.ok) {
         throw new Error('Authentication required');
       }
-      
-      const sessions = await sessionsRes.json();
-      const words = await wordsRes.json();
-      const groups = await groupsRes.json();
-      
-      const lastSession = sessions.results?.[0] || sessions[0] || {};
-      const totalWords = words.results?.length || words.length || 0;
-      const totalGroups = groups.results?.length || groups.length || 0;
-      const completedSessions = sessions.results?.filter(s => s.completed_at).length || sessions.filter(s => s.completed_at).length || 0;
-      
-      return {
-        last_session: {
-          id: lastSession.id || 0,
-          activity: lastSession.activity?.name || 'No sessions',
-          group: 'All',
-          date: lastSession.started_at || 'N/A',
-          correct: lastSession.correct_answers || 0,
-          wrong: (lastSession.total_questions || 0) - (lastSession.correct_answers || 0)
-        },
-        progress: { studied: totalWords, total: totalWords + 50, mastery: Math.round((completedSessions / Math.max(sessions.results?.length || sessions.length || 1, 1)) * 100) },
-        quick_stats: {
-          success_rate: sessions.results?.length || sessions.length ? Math.round((sessions.results?.reduce((a, s) => a + (s.score || 0), 0) || sessions.reduce((a, s) => a + (s.score || 0), 0)) / Math.max(sessions.results?.length || sessions.length, 1)) : 0,
-          total_sessions: sessions.results?.length || sessions.length || 0,
-          active_groups: totalGroups,
-          streak: 0
-        }
-      };
+      return await res.json();
     } catch (e) {
       console.error('Dashboard API error:', e);
       return {
@@ -72,6 +41,21 @@ export const API = {
         progress: { studied: 0, total: 0, mastery: 0 },
         quick_stats: { success_rate: 0, total_sessions: 0, active_groups: 0, streak: 0 }
       };
+    }
+  },
+  async recordWordProgress(wordId, correct) {
+    try {
+      await fetch('/api/word-progress/record/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken()
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({ word_id: wordId, correct })
+      });
+    } catch (e) {
+      console.error('Word progress API error:', e);
     }
   },
   async getActivities() {

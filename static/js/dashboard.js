@@ -1,6 +1,9 @@
 import { API } from './app.js';
 export async function renderDashboard(root){
   const data = await API.getDashboard();
+  const progressPercent = data.progress.total > 0
+    ? Math.round((data.progress.studied / data.progress.total) * 100)
+    : 0;
   root.innerHTML = `
     <div class="grid md:grid-cols-3 gap-5">
       <div class="card p-5 md:col-span-2">
@@ -18,7 +21,7 @@ export async function renderDashboard(root){
         <div class="text-xs uppercase tracking-widest text-zinc-500 mb-3">Study Progress</div>
         <div class="text-3xl font-extrabold">${data.progress.studied}/${data.progress.total}</div>
         <div class="text-sm text-zinc-500">words studied</div>
-        <div class="mt-4 h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden"><div style="width:${data.progress.studied/data.progress.total*100}%" class="h-full bg-zinc-900 dark:bg-white"></div></div>
+        <div class="mt-4 h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden"><div style="width:${progressPercent}%" class="h-full bg-zinc-900 dark:bg-white"></div></div>
         <div class="mt-3 text-sm">Mastery <span class="font-bold">${data.progress.mastery}%</span></div>
       </div>
     </div>

@@ -107,6 +107,7 @@ export async function renderFlashcardActivity(root, activityId, groupId) {
 
     document.getElementById('wrongBtn').onclick = () => {
       wrong++;
+      API.recordWordProgress(word.id, false);
       currentIndex++;
       isFlipped = false;
       renderCard();
@@ -114,6 +115,7 @@ export async function renderFlashcardActivity(root, activityId, groupId) {
 
     document.getElementById('correctBtn').onclick = () => {
       correct++;
+      API.recordWordProgress(word.id, true);
       currentIndex++;
       isFlipped = false;
       renderCard();

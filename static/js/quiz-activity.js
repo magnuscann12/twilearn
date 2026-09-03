@@ -124,6 +124,7 @@ export async function renderQuizActivity(root, activityId, groupId) {
         
         selectedAnswer = btn.dataset.answer;
         const isCorrect = btn.dataset.correct === 'true';
+        API.recordWordProgress(word.id, isCorrect);
         
         document.querySelectorAll('.quiz-option').forEach(b => {
           b.disabled = true;

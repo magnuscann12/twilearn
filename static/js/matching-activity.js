@@ -147,6 +147,7 @@ export async function renderMatchingActivity(root, activityId, groupId) {
         // Check for match
         if (selectedTwi && selectedEnglish) {
           const isMatch = selectedTwi.id === selectedEnglish.id;
+          API.recordWordProgress(selectedTwi.id, isMatch);
           
           if (isMatch) {
             correct++;
